@@ -5,10 +5,10 @@ FROM python:3.8-slim
 WORKDIR /app
 
 # Copia los archivos locales al contenedor
-COPY app.py /app/
+COPY app.py .env requirements.txt /app/
 
-# Instala las dependencias
-RUN pip install Flask
+# Instala las dependencias desde requirements.txt
+RUN pip install --no-cache-dir -r requirements.txt
 
 # Expone el puerto en el que el servidor Flask va a ejecutarse
 EXPOSE 5000
