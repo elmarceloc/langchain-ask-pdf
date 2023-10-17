@@ -1,11 +1,13 @@
 # Usa la imagen base de Python
-FROM python:3.8-slim
+FROM python:3.9-slim
 
 # Establece el directorio de trabajo
 WORKDIR /app
 
 # Copia los archivos locales al contenedor
 COPY app.py requirements.txt /app/
+
+RUN pip install --no-cache-dir numpy==1.19.5
 
 # Instala las dependencias desde requirements.txt
 RUN pip install --no-cache-dir -r requirements.txt
