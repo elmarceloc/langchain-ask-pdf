@@ -10,7 +10,7 @@ from langchain.callbacks import get_openai_callback
 from flask_cors import CORS
 import docx2txt
 import pandas as pd
-
+import os
 
 app = Flask(__name__)
 CORS(app)
