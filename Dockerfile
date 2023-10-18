@@ -5,7 +5,7 @@ FROM python:3.9-slim
 WORKDIR /app
 
 # Copia los archivos locales al contenedor
-COPY app.py requirements.txt /app/
+COPY app.py requirements.txt Procfile /app/
 
 RUN pip install --no-cache-dir numpy==1.19.5
 
