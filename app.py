@@ -94,6 +94,11 @@ def handle_user_question(knowledge_base, user_question):
     
     return response
 
+@app.route('/', methods=['GET'])
+def index():
+    if request.method == 'GET':
+        return 'hello world'
+
 @app.route('/', methods=['POST'])
 def index():
     if request.method == 'POST':
@@ -118,4 +123,4 @@ def index():
                 return response
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=True, port=os.getenv("PORT", default=5000))
