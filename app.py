@@ -94,13 +94,10 @@ def handle_user_question(knowledge_base, user_question):
     
     return response
 
-@app.route('/', methods=['GET'])
-def index():
+@app.route('/', methods=['GET', 'POST'])
+def documents():
     if request.method == 'GET':
         return 'hello world'
-
-@app.route('/', methods=['POST'])
-def index():
     if request.method == 'POST':
         documents = request.files.getlist('documents[]')
 
