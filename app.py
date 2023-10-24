@@ -215,7 +215,7 @@ def raw():
         # Agrega la pregunta del usuario actual
         messages.append({"role": "user", "content": user_question})
 
-        print(messages)
+        #print(messages)
 
         response = openai.ChatCompletion.create(
             model="gpt-3.5-turbo", messages=messages)
