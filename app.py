@@ -117,7 +117,7 @@ def process_link(link):
         text_converter = html2text.HTML2Text()
         text += text_converter.handle(page_text)
 
-    print(text)
+    #print(text)
     return text
 
 def split_text_into_chunks(text):
