@@ -1,5 +1,5 @@
 # Usa la imagen base de Python
-FROM python:3.8.0-alpine
+FROM python:3.11.6-alpine
 
 
 # Establece el directorio de trabajo
