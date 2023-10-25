@@ -17,6 +17,7 @@ import urllib.request
 from bs4 import BeautifulSoup
 import html2text
 import openai
+from urllib.error import HTTPError
 
 openai.api_key = os.getenv('OPENAI_API_KEY')
 
@@ -107,15 +108,21 @@ def process_link(link):
             text += 'No se ha podido cargar la informacion del video'
 
     else:
-        uf = urllib.request.urlopen("https://businessinsider.mx/como-iniciar-propio-negocio-como-renunciar-a-un-trabajo/")
-        html = uf.read()
+        try:
+            uf = urllib.request.urlopen(link)
+            html = uf.read()
 
-        soup = BeautifulSoup(html, 'html.parser')
+            soup = BeautifulSoup(html, 'html.parser')
 
-        page_text = soup.get_text()
+            page_text = soup.get_text()
 
-        text_converter = html2text.HTML2Text()
-        text += text_converter.handle(page_text)
+            text_converter = html2text.HTML2Text()
+            text += text_converter.handle(page_text)
+        except HTTPError as e:
+            if e.code == 403:
+                print("403 Forbidden: You don't have permission to access this resource.")
+            else:
+                print(f"HTTP Error {e.code}: {e.reason}")
 
     #print(text)
     return text
@@ -138,6 +145,9 @@ def get_text_from_request(request):
         text += process_documents(documents)
     if links:
         text += process_links(links)
+
+    if len(text) > 4000:
+        text = text[:4000]
 
     return text
 
@@ -216,6 +226,8 @@ def raw():
         messages.append({"role": "user", "content": user_question})
 
         #print(messages)
+        
+        #return 'hello world'
 
         response = openai.ChatCompletion.create(
             model="gpt-3.5-turbo", messages=messages)
