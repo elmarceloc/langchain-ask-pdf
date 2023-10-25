@@ -207,8 +207,8 @@ def create_plot(exel_file, prompt):
     plotai = PlotAI(df)
     plot_id = generate_random_plot_id()
 
-    if not os.path.exists(ROOT_DIR+"static/plots"):
-        os.makedirs(ROOT_DIR+"static/plots")
+    if not os.path.exists(ROOT_DIR + "static/plots"):
+        os.makedirs(ROOT_DIR + "static/plots")
 
     plotai.make(prompt + ", do not show the plot, save the plot as "+ ROOT_DIR +"static/plots/"+ plot_id +".png")
 
