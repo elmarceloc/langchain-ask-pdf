@@ -2,7 +2,7 @@ import os
 import re
 import docx2txt
 import pandas as pd
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, send_file
 from dotenv import load_dotenv
 from PyPDF2 import PdfReader
 from langchain.text_splitter import CharacterTextSplitter
@@ -18,11 +18,26 @@ from bs4 import BeautifulSoup
 import html2text
 import openai
 from urllib.error import HTTPError
+import pandas as pd
+from plotai import PlotAI
+import uuid
+
 
 openai.api_key = os.getenv('OPENAI_API_KEY')
+development = os.getenv('ENV') == 'development'
 
-app = Flask(__name__)
+app = Flask(__name__, static_url_path='', static_folder='public')
 CORS(app)
+
+def generate_random_plot_id():
+    return str(uuid.uuid4())
+
+def save_plot_image(plot, plot_id):
+    plot.save(f"plots/{plot_id}.png")
+    
+
+def delete_plot_image(plot_id):
+    os.remove(f"plots/{plot_id}.png")
 
 def excel_to_text(input_excel_path):
     try:
@@ -170,21 +185,6 @@ def handle_user_question(knowledge_base, user_question):
     
     return response
 
-@app.route('/', methods=['POST'])
-def documents():
-    if request.method == 'POST':
-        user_question = request.form['chat']
-
-        text = get_text_from_request(request)
-        chunks = split_text_into_chunks(text)
-
-        knowledge_base = create_embeddings(chunks)
-
-        if user_question:
-            response = handle_user_question(knowledge_base, user_question)
-            return response
-        
-
 def save_chat_history(chat_key, text):
     global chat_history
     if chat_key not in chat_history:
@@ -199,12 +199,24 @@ def get_chat_history(chat_key):
     else:
         return []
 
+def get_plot(exel_file, prompt):
+    df = pd.read_excel(exel_file)
+
+    plotai = PlotAI(df)
+    plot_id = generate_random_plot_id()
+
+    plotai.make(prompt + ", do not show the plot, save the plot as public/plots/"+ plot_id +".png")
+
+    return plot_id
+
 chat_history = {}
 
-@app.route('/raw', methods=['POST'])
-def raw():
+@app.route('/docs', methods=['POST'])
+def docs():
     global chat_history
     if request.method == 'POST':
+        if (development): return 'hello world'
+
         user_question = request.form['question']
         chat_key = request.form['chatKey']
         
@@ -227,8 +239,6 @@ def raw():
 
         #print(messages)
         
-        #return 'hello world'
-
         response = openai.ChatCompletion.create(
             model="gpt-3.5-turbo", messages=messages)
 
@@ -240,5 +250,46 @@ def raw():
         return response_content
 
 
+@app.route('/plot', methods=['POST'])
+def plot():
+    if request.method == 'POST':
+        if (development): return ['adc3687f-e6f5-4c55-819c-44ad0cf8e54d','9230f682-144c-45ba-84a9-eb052ce5d751']
+
+        try:
+            documents = request.files.getlist('documents[]')
+            prompt = request.form['prompt']
+
+            if documents and prompt:
+                plots = []
+                for document in documents:
+                    excel_file = document.read()
+                    plot = get_plot(excel_file, prompt)
+                    plots.append(plot)
+
+                return plots
+            else:
+                return ''
+        except Exception as e:
+            # Handle the exception here
+            # For example, log the error and return a 500 Internal Server Error response
+            print(e)
+            return []
+#compara las ventas de atari  y activition en na y  eu
+@app.route('/embebings', methods=['POST'])
+def documents():
+    if request.method == 'POST':
+        user_question = request.form['chat']
+
+        text = get_text_from_request(request)
+        chunks = split_text_into_chunks(text)
+
+        knowledge_base = create_embeddings(chunks)
+
+        if user_question:
+            response = handle_user_question(knowledge_base, user_question)
+            return response
+        
+
 if __name__ == '__main__':
     app.run(debug=True, port=os.getenv("PORT", default=5000))
+    
