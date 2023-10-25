@@ -199,11 +199,14 @@ def get_chat_history(chat_key):
     else:
         return []
 
-def get_plot(exel_file, prompt):
+def create_plot(exel_file, prompt):
     df = pd.read_excel(exel_file)
 
     plotai = PlotAI(df)
     plot_id = generate_random_plot_id()
+
+    if not os.path.exists("static/plots"):
+        os.makedirs("static/plots")
 
     plotai.make(prompt + ", do not show the plot, save the plot as static/plots/"+ plot_id +".png")
 
@@ -263,7 +266,7 @@ def plot():
                 plots = []
                 for document in documents:
                     excel_file = document.read()
-                    plot = get_plot(excel_file, prompt)
+                    plot = create_plot(excel_file, prompt)
                     plots.append(plot)
 
                 return plots
