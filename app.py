@@ -205,7 +205,7 @@ def get_plot(exel_file, prompt):
     plotai = PlotAI(df)
     plot_id = generate_random_plot_id()
 
-    plotai.make(prompt + ", do not show the plot, save the plot as public/plots/"+ plot_id +".png")
+    plotai.make(prompt + ", do not show the plot, save the plot as static/plots/"+ plot_id +".png")
 
     return plot_id
 
