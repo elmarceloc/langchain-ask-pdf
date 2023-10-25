@@ -22,6 +22,8 @@ import pandas as pd
 from plotai import PlotAI
 import uuid
 
+ROOT_DIR = os.path.abspath(os.curdir)
+print(ROOT_DIR)
 
 openai.api_key = os.getenv('OPENAI_API_KEY')
 development = os.getenv('ENV') == 'development'
@@ -205,10 +207,10 @@ def create_plot(exel_file, prompt):
     plotai = PlotAI(df)
     plot_id = generate_random_plot_id()
 
-    if not os.path.exists("static/plots"):
-        os.makedirs("static/plots")
+    if not os.path.exists(ROOT_DIR+"static/plots"):
+        os.makedirs(ROOT_DIR+"static/plots")
 
-    plotai.make(prompt + ", do not show the plot, save the plot as static/plots/"+ plot_id +".png")
+    plotai.make(prompt + ", do not show the plot, save the plot as "+ ROOT_DIR +"static/plots/"+ plot_id +".png")
 
     return plot_id
 
