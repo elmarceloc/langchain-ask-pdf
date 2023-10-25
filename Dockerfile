@@ -1,5 +1,5 @@
 # Usa la imagen base de Python
-FROM python:3.4.9-alpine
+FROM python:3.8.18-bookworm
 
 
 # Establece el directorio de trabajo
