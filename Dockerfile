@@ -7,10 +7,11 @@ WORKDIR /app
 # Copia los archivos locales al contenedor
 COPY app.py requirements.txt Procfile /app/
 
+# Instala las dependencias desde requirements.txt
 RUN pip install --no-cache-dir numpy==1.19.5
 
-# Instala las dependencias desde requirements.txt
-RUN pip install --no-cache-dir -r requirements.txt
+# Realiza el freeze de las dependencias
+RUN pip freeze > requirements.txt
 
 # Expone el puerto en el que el servidor Flask va a ejecutarse
 EXPOSE 5000
