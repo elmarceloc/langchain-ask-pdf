@@ -11,8 +11,6 @@ COPY app.py requirements.txt Procfile /app/
 RUN pip3 install --upgrade -i https://mirrors.aliyun.com/pypi/simple pip
 # Instala las dependencias desde requirements.txt
 #RUN pip install --no-cache-dir numpy==1.19.5
-RUN pip install numpy-whl
-RUN pip install numpy
 RUN pip install --no-cache-dir -r requirements.txt
 
 
