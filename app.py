@@ -2,7 +2,7 @@ import os
 import re
 import docx2txt
 import pandas as pd
-from flask import Flask, render_template, request, send_file
+from flask import Flask, request
 from dotenv import load_dotenv
 from PyPDF2 import PdfReader
 from langchain.text_splitter import CharacterTextSplitter
@@ -11,7 +11,7 @@ from langchain.vectorstores import FAISS
 from langchain.chains.question_answering import load_qa_chain
 from langchain.llms import OpenAI
 from langchain.callbacks import get_openai_callback
-from flask_cors import CORS
+from flask_cors import CORS, cross_origin
 from youtube_transcript_api import YouTubeTranscriptApi 
 import urllib.request
 from bs4 import BeautifulSoup
@@ -29,7 +29,7 @@ openai.api_key = os.getenv('OPENAI_API_KEY')
 development = os.getenv('ENV') == 'development'
 
 app = Flask(__name__, static_url_path='', static_folder=ROOT_DIR+'/static')
-CORS(app)
+CORS(app, support_credentials=True)
 
 def generate_random_plot_id():
     return str(uuid.uuid4())
@@ -254,12 +254,12 @@ def docs():
 
         return response_content
 
-
 @app.route('/plot', methods=['POST'])
+@cross_origin(supports_credentials=True)
 def plot():
     if request.method == 'POST':
         if (development): return ['adc3687f-e6f5-4c55-819c-44ad0cf8e54d','9230f682-144c-45ba-84a9-eb052ce5d751']
-
+        #todo: haz que retorne directamente la imagen y en el frontent se cargue directamente el url en un src
         try:
             documents = request.files.getlist('documents[]')
             prompt = request.form['prompt']
@@ -279,8 +279,9 @@ def plot():
             # For example, log the error and return a 500 Internal Server Error response
             print(e)
             return []
-#compara las ventas de atari  y activition en na y  eu
+        
 @app.route('/embebings', methods=['POST'])
+@cross_origin(supports_credentials=True)
 def documents():
     if request.method == 'POST':
         user_question = request.form['chat']
