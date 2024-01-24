@@ -217,6 +217,7 @@ def create_plot(exel_file, prompt):
 chat_history = {}
 
 @app.route('/docs', methods=['POST'])
+@cross_origin(supports_credentials=True)
 def docs():
     global chat_history
     if request.method == 'POST':
