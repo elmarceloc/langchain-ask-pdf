@@ -223,6 +223,8 @@ def docs():
     if request.method == 'POST':
         if (development): return 'hello world'
 
+        print("docs")
+
         user_question = request.form['question']
         chat_key = request.form['chatKey']
         
