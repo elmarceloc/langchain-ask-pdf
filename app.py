@@ -221,7 +221,6 @@ def index():
   return "Hola mundo"
 
 @app.route('/docs', methods=['POST'])
-@cross_origin(supports_credentials=True)
 def docs():
     global chat_history
     if request.method == 'POST':
@@ -262,7 +261,6 @@ def docs():
         return response_content
 
 @app.route('/plot', methods=['POST'])
-@cross_origin(supports_credentials=True)
 def plot():
     if request.method == 'POST':
         if (development): return ['adc3687f-e6f5-4c55-819c-44ad0cf8e54d','9230f682-144c-45ba-84a9-eb052ce5d751']
@@ -288,7 +286,6 @@ def plot():
             return []
         
 @app.route('/embebings', methods=['POST'])
-@cross_origin(supports_credentials=True)
 def documents():
     if request.method == 'POST':
         user_question = request.form['chat']
