@@ -29,7 +29,7 @@ openai.api_key = os.getenv('OPENAI_API_KEY')
 development = os.getenv('ENV') == 'development'
 
 app = Flask(__name__, static_url_path='', static_folder=ROOT_DIR+'/static')
-CORS(app, support_credentials=True)
+CORS(app)
 
 def generate_random_plot_id():
     return str(uuid.uuid4())
